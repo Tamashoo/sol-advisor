@@ -1,11 +1,11 @@
 # Sol Advisor
 
-**Sol / High runs the show. It declares a risk-gated route before task tools, keeps
-solo as the default, and uses a single auxiliary only when that improves delivery.**
+**The latest available high-capability Sol or Astra model runs the show.
+It declares a risk-gated route before task tools, keeps solo as the default, and uses a single auxiliary only when that improves delivery.**
 
 Sol Advisor is a Codex-only workflow for capability-routed software delivery. You
-bring the goal and constraints; Sol owns the plan, implementation or delegation,
-verification, and acceptance.
+bring the goal and constraints; the primary session owns the plan, implementation
+or delegation, verification, and acceptance.
 
 ## Go deeper
 
@@ -13,12 +13,18 @@ I write [**Attention Heads**](https://attentionheads.substack.com/?utm_source=gi
 
 ## Quick start
 
-You need a current Codex CLI or ChatGPT desktop app with plugins enabled, GPT-5.6
-Sol / High for the primary session, native custom-agent support, and jq. GPT-5.6
+You need a current Codex CLI or ChatGPT desktop app with plugins enabled and the
+latest available high-capability Sol or Astra model for the primary session
+(high reasoning recommended; medium or higher supported),
+native custom-agent support, and jq.
 Luna / Max or Terra / High access is needed only when the selected route delegates.
+The routine lane uses GPT-6 Luna; Terra remains on GPT-5.6. The reviewer currently
+uses GPT-6.1 Sol / High; auxiliary model pins do not update automatically.
+Missing primary model or effort metadata does not require user confirmation;
+an observed non-Sol/non-Astra model or reasoning below medium stops delegation.
 
 ~~~sh
-codex plugin marketplace add DannyMac180/sol-advisor --ref main
+codex plugin marketplace add Tamashoo/sol-advisor --ref main
 codex plugin add sol-advisor@sol-advisor
 plugin_dir="$(codex plugin list --json | jq -r '.installed[] | select(.pluginId == "sol-advisor@sol-advisor") | .source.path')" && test -n "$plugin_dir" && test "$plugin_dir" != null && test -d "$plugin_dir" && test -f "$plugin_dir/scripts/install-agents.sh" && sh "$plugin_dir/scripts/install-agents.sh"
 ~~~
@@ -50,14 +56,14 @@ acceptance.
 | `full` | Explicit broad or high-risk exception. | One selected implementer, root verification, and a fresh Sol / High review. |
 
 Solo is the default. One auxiliary is the default maximum; `full` is the explicit
-exception. Sol emits a `SELECTIVE ROUTE` declaration with the mode and concise risk
-rationale before the first task tool call. It can escalate only when newly observed
+exception. The primary session emits a `SELECTIVE ROUTE` declaration with the mode
+and concise risk rationale before the first task tool call. It can escalate only when newly observed
 risk justifies it and never silently downgrades.
 
 ## What happens automatically
 
-Sol / High keeps architecture, decomposition, route selection, parent verification,
-escalation decisions, and acceptance in the primary task. Auxiliary work substitutes
+The primary session keeps architecture, decomposition, route selection, parent
+verification, escalation decisions, and acceptance in the primary task. Auxiliary work substitutes
 for root work; it does not duplicate it. The root inspects the complete diff and
 reruns the requested checks. When the selected route includes a review, a fresh Sol /
 High reviewer returns ship, fix-first, or rethink; any fix requires a new review.

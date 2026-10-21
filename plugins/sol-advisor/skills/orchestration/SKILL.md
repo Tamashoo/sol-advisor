@@ -15,13 +15,16 @@ Read [references/role-contracts.md](references/role-contracts.md) before the fir
 delegation. Use [references/operations.md](references/operations.md) for exact spawn,
 preflight, runtime-evidence, isolation, and maintainer procedures.
 
-## Confirm the primary session
+## Check the primary session
 
-Run the primary Codex session on gpt-5.6-sol with high reasoning. Verify the current
-model and effort when runtime metadata exposes them. If either differs, tell the user
-to select Sol / High and stop before delegation. If runtime metadata does not expose
-them, ask the user to confirm Sol / High and stop until confirmed. A skill cannot
-change the primary model itself; never assume or claim this prerequisite is satisfied.
+Run the primary Codex session on the latest available high-capability Sol or Astra
+model. Do not pin the primary session to a specific model generation. Prefer high
+reasoning; medium and higher are supported. Verify model and effort only when
+runtime metadata exposes them. If the model is observably neither Sol nor Astra,
+or the effort is observably below medium,
+tell the user what to change and stop before delegation. Missing model or effort
+metadata is not a blocker: continue without asking the user to confirm a setting and
+never claim an unobserved setting. A skill cannot change the primary model or effort.
 
 ## Declare the route before task tools
 
@@ -40,7 +43,7 @@ escalation. Details and the task-scoped preflight matrix are in operations.md.
 
 ## Preflight selected auxiliaries only
 
-Confirm Sol / High in the primary session. Preflight only an auxiliary selected by the
+Apply the primary-session rule above. Preflight only an auxiliary selected by the
 declared route: none for solo; Luna / Max or Terra / High for delegate; fresh Sol / High
 for audit; and the selected implementer plus fresh Sol reviewer for full. Public metadata
 for role, model, and effort is authoritative. If it omits a model or effort, use the

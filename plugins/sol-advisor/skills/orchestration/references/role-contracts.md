@@ -21,11 +21,15 @@ Solo is the default; one auxiliary is the default maximum. Full is an explicit b
 or high-risk exception. A later route declaration may only escalate after newly
 observed risk justifies it and supplies that evidence; never silently downgrade.
 
-Confirm Sol / High in the primary session, then preflight only auxiliaries selected by
-the route: none for solo; Luna / Max or Terra / High for delegate; fresh Sol / High
-for audit; and one selected implementer plus fresh Sol reviewer for full. Cache each
-successful check only for the task. After spawning, complete the selected role's
-routing and reviewer-isolation checks before accepting the result:
+Use the latest available high-capability Sol or Astra model in the primary session,
+without pinning a generation. Prefer high reasoning; medium and higher are supported.
+Check primary model and effort only when exposed. Stop delegation for an observed
+non-Sol/non-Astra model or effort below medium, but do not ask the user to confirm
+missing runtime metadata. Then preflight only auxiliaries selected by the route: none
+for solo; Luna / Max or Terra / High for delegate; fresh Sol / High for audit; and one
+selected implementer plus fresh Sol reviewer for full. Cache each successful check
+only for the task. After spawning, complete the selected role's routing and
+reviewer-isolation checks before accepting the result:
 
 1. Require the selected exact native role and fresh-context spawn contract.
 2. Observe the selected role, model, and effort through public spawn/details metadata
@@ -102,7 +106,7 @@ observed, risk-evidenced route escalation is declared; never silently add one.
 ## Luna / Max - bounded delegate/full implementation lane
 
 Use this lane only when a declared delegate or full route selects it for bounded,
-fully specified work. The installed role pins GPT-5.6 Luna at max reasoning. It must
+fully specified work. The installed role pins GPT-6 Luna at max reasoning. It must
 surface ambiguity and failed checks rather than redesigning the architecture. A first
 result that demonstrates newly observed judgment-heavy, high-risk, wide-blast-radius,
 or misclassified work may justify a declared Terra escalation; do not force a retry
@@ -163,8 +167,9 @@ agent_type: sol_advisor_sol_reviewer
 fork_turns: none
 ~~~
 
-The installed role pins Sol / High and requests a read-only sandbox. Do not attach
-per-spawn model or reasoning fields. Observe the actual role, pin, sandbox policy, and
+The installed reviewer currently pins GPT-6.1 Sol / High and requests a read-only
+sandbox. The primary-session model policy does not automatically update this pin.
+Do not attach per-spawn model or reasoning fields. Observe the actual role, pin, sandbox policy, and
 permission profile before accepting its verdict.
 
 Prompt:

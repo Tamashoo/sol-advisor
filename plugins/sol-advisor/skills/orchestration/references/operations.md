@@ -6,13 +6,17 @@ inspecting routing, or validating a release.
 
 ## Role pins and spawn contract
 
-The installed TOMLs are the source of truth:
+The installed TOMLs are the source of truth for auxiliary models. Their concrete
+model IDs are deliberate pins, not automatic latest aliases. Update and verify the
+reviewer pin when adopting a newer Sol model; the primary session may also use Astra.
+
+Current auxiliary pins:
 
 | Role type | Model | Effort | Use |
 |---|---|---|---|
-| sol_advisor_luna_implementer | gpt-5.6-luna | max | Delegate/full bounded routine implementation |
+| sol_advisor_luna_implementer | gpt-6-luna | max | Delegate/full bounded routine implementation |
 | sol_advisor_terra_implementer | gpt-5.6-terra | high | Delegate/full judgment-heavy or high-risk implementation |
-| sol_advisor_sol_reviewer | gpt-5.6-sol | high | Audit/full fresh review; requests read-only sandbox |
+| sol_advisor_sol_reviewer | gpt-6.1-sol | high | Audit/full fresh review; requests read-only sandbox |
 
 Native spawn requests name the role and use a fresh context:
 
@@ -40,8 +44,13 @@ unobservable role/model/effort is a hard stop; never substitute another role.
 
 ## Selective route declaration, preflight, and caching
 
-The primary session must be Sol / High. Companion installation is separate from task
-routing because plugin installation does not register user-owned TOMLs.
+The primary session uses the latest available high-capability Sol or Astra model,
+without a fixed generation. High reasoning is preferred; medium and higher are
+supported. Check model and effort only when runtime metadata exposes them. An observed
+non-Sol/non-Astra model or effort below medium stops delegation, but missing
+primary-session metadata does not: continue without asking the user to confirm or
+claiming an unobserved setting. Companion installation is separate from task routing
+because plugin installation does not register user-owned TOMLs.
 
 At installation or update time, run the repository-relative installer and its exactness
 check:
@@ -61,9 +70,9 @@ sh "$installer" --check
 ~~~
 
 The installer is fail-closed and performs its own post-install exactness check. It
-recognizes only byte-exact historical templates, including the shipped v0.2.0 profiles
-and the v0.5.0 Luna/Terra profiles during a v0.5.1 update. Modified/unsafe/nonregular/
-symlinked/conflicting destinations remain refusals, and all mutations are preflighted.
+recognizes only byte-exact historical templates, including the shipped v0.2.0 profiles,
+the v0.5.0 Luna/Terra profiles, and the v0.6.0 GPT-5.6 Luna and Sol profiles.
+Modified/unsafe/nonregular/symlinked/conflicting destinations remain refusals, and all mutations are preflighted.
 
 The root emits one machine-auditable declaration before its first task tool call:
 
