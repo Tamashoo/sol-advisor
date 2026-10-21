@@ -24,7 +24,7 @@ Missing primary model or effort metadata does not require user confirmation;
 an observed non-Sol/non-Astra model or reasoning below medium stops delegation.
 
 ~~~sh
-codex plugin marketplace add Tamashoo/sol-advisor --ref codex/gpt-6-luna
+codex plugin marketplace add Tamashoo/sol-advisor --ref main
 codex plugin add sol-advisor@sol-advisor
 plugin_dir="$(codex plugin list --json | jq -r '.installed[] | select(.pluginId == "sol-advisor@sol-advisor") | .source.path')" && test -n "$plugin_dir" && test "$plugin_dir" != null && test -d "$plugin_dir" && test -f "$plugin_dir/scripts/install-agents.sh" && sh "$plugin_dir/scripts/install-agents.sh"
 ~~~
