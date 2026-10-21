@@ -17,9 +17,11 @@ preflight, runtime-evidence, isolation, and maintainer procedures.
 
 ## Check the primary session
 
-Run the primary Codex session on gpt-5.6-sol. Prefer high reasoning; medium and higher
-are supported. Verify the current model and effort only when runtime metadata exposes
-them. If the model is observably not Sol, or the effort is observably below medium,
+Run the primary Codex session on the latest available high-capability Sol or Astra
+model. Do not pin the primary session to a specific model generation. Prefer high
+reasoning; medium and higher are supported. Verify model and effort only when
+runtime metadata exposes them. If the model is observably neither Sol nor Astra,
+or the effort is observably below medium,
 tell the user what to change and stop before delegation. Missing model or effort
 metadata is not a blocker: continue without asking the user to confirm a setting and
 never claim an unobserved setting. A skill cannot change the primary model or effort.

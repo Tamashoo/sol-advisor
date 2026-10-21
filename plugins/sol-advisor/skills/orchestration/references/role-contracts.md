@@ -21,9 +21,10 @@ Solo is the default; one auxiliary is the default maximum. Full is an explicit b
 or high-risk exception. A later route declaration may only escalate after newly
 observed risk justifies it and supplies that evidence; never silently downgrade.
 
-Use Sol in the primary session, preferably with high reasoning; medium and higher are
-supported. Check primary model and effort only when exposed. Stop delegation for an
-observably different model or effort below medium, but do not ask the user to confirm
+Use the latest available high-capability Sol or Astra model in the primary session,
+without pinning a generation. Prefer high reasoning; medium and higher are supported.
+Check primary model and effort only when exposed. Stop delegation for an observed
+non-Sol/non-Astra model or effort below medium, but do not ask the user to confirm
 missing runtime metadata. Then preflight only auxiliaries selected by the route: none
 for solo; Luna / Max or Terra / High for delegate; fresh Sol / High for audit; and one
 selected implementer plus fresh Sol reviewer for full. Cache each successful check
@@ -166,8 +167,9 @@ agent_type: sol_advisor_sol_reviewer
 fork_turns: none
 ~~~
 
-The installed role pins Sol / High and requests a read-only sandbox. Do not attach
-per-spawn model or reasoning fields. Observe the actual role, pin, sandbox policy, and
+The installed reviewer currently pins GPT-6.1 Sol / High and requests a read-only
+sandbox. The primary-session model policy does not automatically update this pin.
+Do not attach per-spawn model or reasoning fields. Observe the actual role, pin, sandbox policy, and
 permission profile before accepting its verdict.
 
 Prompt:
