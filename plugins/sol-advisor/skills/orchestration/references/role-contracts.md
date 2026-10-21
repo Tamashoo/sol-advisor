@@ -102,7 +102,7 @@ observed, risk-evidenced route escalation is declared; never silently add one.
 ## Luna / Max - bounded delegate/full implementation lane
 
 Use this lane only when a declared delegate or full route selects it for bounded,
-fully specified work. The installed role pins GPT-5.6 Luna at max reasoning. It must
+fully specified work. The installed role pins GPT-6 Luna at max reasoning. It must
 surface ambiguity and failed checks rather than redesigning the architecture. A first
 result that demonstrates newly observed judgment-heavy, high-risk, wide-blast-radius,
 or misclassified work may justify a declared Terra escalation; do not force a retry

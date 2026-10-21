@@ -10,7 +10,7 @@ The installed TOMLs are the source of truth:
 
 | Role type | Model | Effort | Use |
 |---|---|---|---|
-| sol_advisor_luna_implementer | gpt-5.6-luna | max | Delegate/full bounded routine implementation |
+| sol_advisor_luna_implementer | gpt-6-luna | max | Delegate/full bounded routine implementation |
 | sol_advisor_terra_implementer | gpt-5.6-terra | high | Delegate/full judgment-heavy or high-risk implementation |
 | sol_advisor_sol_reviewer | gpt-5.6-sol | high | Audit/full fresh review; requests read-only sandbox |
 
@@ -61,8 +61,8 @@ sh "$installer" --check
 ~~~
 
 The installer is fail-closed and performs its own post-install exactness check. It
-recognizes only byte-exact historical templates, including the shipped v0.2.0 profiles
-and the v0.5.0 Luna/Terra profiles during a v0.5.1 update. Modified/unsafe/nonregular/
+recognizes only byte-exact historical templates, including the shipped v0.2.0 profiles,
+the v0.5.0 Luna/Terra profiles, and the v0.6.0 GPT-5.6 Luna profile. Modified/unsafe/nonregular/
 symlinked/conflicting destinations remain refusals, and all mutations are preflighted.
 
 The root emits one machine-auditable declaration before its first task tool call:
