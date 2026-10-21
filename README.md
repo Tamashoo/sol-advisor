@@ -14,12 +14,15 @@ I write [**Attention Heads**](https://attentionheads.substack.com/?utm_source=gi
 ## Quick start
 
 You need a current Codex CLI or ChatGPT desktop app with plugins enabled, GPT-5.6
-Sol / High for the primary session, native custom-agent support, and jq.
+Sol for the primary session (high reasoning recommended; medium or higher supported),
+native custom-agent support, and jq.
 Luna / Max or Terra / High access is needed only when the selected route delegates.
 The routine lane uses GPT-6 Luna; Terra remains on GPT-5.6.
+Missing primary model or effort metadata does not require user confirmation;
+observed model mismatches or reasoning below medium stop delegation.
 
 ~~~sh
-codex plugin marketplace add DannyMac180/sol-advisor --ref main
+codex plugin marketplace add Tamashoo/sol-advisor --ref codex/gpt-6-luna
 codex plugin add sol-advisor@sol-advisor
 plugin_dir="$(codex plugin list --json | jq -r '.installed[] | select(.pluginId == "sol-advisor@sol-advisor") | .source.path')" && test -n "$plugin_dir" && test "$plugin_dir" != null && test -d "$plugin_dir" && test -f "$plugin_dir/scripts/install-agents.sh" && sh "$plugin_dir/scripts/install-agents.sh"
 ~~~

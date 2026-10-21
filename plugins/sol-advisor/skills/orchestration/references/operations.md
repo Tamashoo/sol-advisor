@@ -40,8 +40,12 @@ unobservable role/model/effort is a hard stop; never substitute another role.
 
 ## Selective route declaration, preflight, and caching
 
-The primary session must be Sol / High. Companion installation is separate from task
-routing because plugin installation does not register user-owned TOMLs.
+The primary session uses Sol. High reasoning is preferred; medium and higher are
+supported. Check model and effort only when runtime metadata exposes them. An
+observably different model or effort below medium stops delegation, but missing
+primary-session metadata does not: continue without asking the user to confirm or
+claiming an unobserved setting. Companion installation is separate from task routing
+because plugin installation does not register user-owned TOMLs.
 
 At installation or update time, run the repository-relative installer and its exactness
 check:
