@@ -43,6 +43,7 @@ legacy_luna_sha256=fba1b42849d93737e83b094a2ab0b1611f87ac37db7438c8bbdf581f0813f
 legacy_terra_sha256=4425a8c1f21ce8c6af93f96adc253bbc33ea301f1389b3fa8ce350be08584eca
 legacy_luna_v050_sha256=5cfaf77f14757074ca5d3cfecd0b8204c91dc14eff8d6119985c64416ddf4853
 legacy_terra_v050_sha256=dc329fe87f6f6610c13157ec16432f91c79cf5a541ee3e7448f6afb165dd18ce
+legacy_terra_v061_sha256=77ed2f36bb149da5d9032230c3d6f5e5cd56b059b3fa5f59085249bba06e1f3a
 legacy_luna_v060_sha256=12fa9180a292876e6731bc325779123bcd931c3caa902fbf90d676a31833be84
 legacy_sol_v060_sha256=0333acf0ef562bcfebd06009ac09bd1dd8cbc04c4cf28e08e9e049bd8bf202d2
 
@@ -165,14 +166,14 @@ test ! -e "$retired_contract" || fail "retired separate workflow contract remain
 pass "required files present and retired contract absent"
 
 jq empty "$manifest"
-[ "$(jq -r '.version' "$manifest")" = 0.6.1 ] || fail "manifest version is not 0.6.1"
+[ "$(jq -r '.version' "$manifest")" = 0.6.2 ] || fail "manifest version is not 0.6.2"
 grep -Fq 'SELECTIVE ROUTE' "$manifest" || fail "manifest omits route declaration"
 grep -Fq 'solo is the default' "$manifest" || fail "manifest omits solo default"
 grep -Fq 'delegate uses native GPT-6 Luna / Max' "$manifest" || fail "manifest omits delegate role contract"
 grep -Fq 'audit uses a fresh read-only GPT-6.1 Sol / High review' "$manifest" || fail "manifest omits audit contract"
 grep -Fq 'full combines one selected implementer' "$manifest" || fail "manifest omits exceptional full contract"
 grep -Fq 'fails closed' "$manifest" || fail "manifest omits fail-closed evidence rule"
-pass "manifest JSON, v0.6.1 release, and selective-routing language"
+pass "manifest JSON, v0.6.2 release, and selective-routing language"
 
 python3 - "$templates" <<'PY'
 from pathlib import Path
@@ -188,7 +189,7 @@ expected = {
     },
     "sol-advisor-terra-implementer.toml": {
         "name": "sol_advisor_terra_implementer",
-        "model": "gpt-5.6-terra",
+        "model": "gpt-6.1-terra",
         "model_reasoning_effort": "high",
     },
     "sol-advisor-sol-reviewer.toml": {
@@ -217,6 +218,7 @@ grep -Fq "legacy_luna_sha256=$legacy_luna_sha256" "$installer" || fail "installe
 grep -Fq "legacy_terra_sha256=$legacy_terra_sha256" "$installer" || fail "installer legacy Terra digest mismatch"
 grep -Fq "legacy_luna_v050_sha256=$legacy_luna_v050_sha256" "$installer" || fail "installer v0.5.0 Luna digest mismatch"
 grep -Fq "legacy_terra_v050_sha256=$legacy_terra_v050_sha256" "$installer" || fail "installer v0.5.0 Terra digest mismatch"
+grep -Fq "legacy_terra_v061_sha256=$legacy_terra_v061_sha256" "$installer" || fail "installer v0.6.1 Terra digest mismatch"
 pass "immutable historical migration fingerprints"
 
 clean_target=$tmp_dir/clean
@@ -325,6 +327,23 @@ sed 's/gpt-6-luna/gpt-5.6-luna/' "$templates/$luna_file" > "$v060_migration_targ
 sh "$installer" --target-dir "$v060_migration_target"
 sh "$installer" --target-dir "$v060_migration_target" --check
 pass "exact v0.6.0 Luna migration, old-model check refusal, and modified-profile refusal"
+
+terra_migration_target=$tmp_dir/terra-migration
+sh "$installer" --target-dir "$terra_migration_target"
+sed 's/gpt-6.1-terra/gpt-5.6-terra/' "$templates/$terra_file" > "$terra_migration_target/$terra_file"
+[ "$(shasum -a 256 "$terra_migration_target/$terra_file" | awk '{print $1}')" = "$legacy_terra_v061_sha256" ] || fail "v0.6.1 Terra fixture digest drifted"
+before=$(snapshot_files "$terra_migration_target")
+if sh "$installer" --target-dir "$terra_migration_target" --check --check-role terra; then fail "check accepted old GPT-5.6 Terra"; fi
+[ "$before" = "$(snapshot_files "$terra_migration_target")" ] || fail "old Terra check mutated target"
+printf '%s\n' modified >> "$terra_migration_target/$terra_file"
+before=$(snapshot_files "$terra_migration_target")
+if sh "$installer" --target-dir "$terra_migration_target"; then fail "installer replaced modified v0.6.1 Terra"; fi
+[ "$before" = "$(snapshot_files "$terra_migration_target")" ] || fail "modified v0.6.1 Terra refusal mutated target"
+sed 's/gpt-6.1-terra/gpt-5.6-terra/' "$templates/$terra_file" > "$terra_migration_target/$terra_file"
+sh "$installer" --target-dir "$terra_migration_target"
+sh "$installer" --target-dir "$terra_migration_target" --check
+cmp -s "$templates/$terra_file" "$terra_migration_target/$terra_file" || fail "v0.6.1 Terra migration mismatch"
+pass "exact v0.6.1 Terra migration, old-model check refusal, and modified-profile refusal"
 
 sol_migration_target=$tmp_dir/sol-migration
 sh "$installer" --target-dir "$sol_migration_target"
@@ -582,4 +601,4 @@ sh -n "$runtime_inspector"
 sh -n "$script_dir/verify.sh"
 pass "shell syntax"
 
-printf '%s\n' "VERIFY PASSED: Sol Advisor v0.6.1 selective routing checks completed in $tmp_dir"
+printf '%s\n' "VERIFY PASSED: Sol Advisor v0.6.2 selective routing checks completed in $tmp_dir"

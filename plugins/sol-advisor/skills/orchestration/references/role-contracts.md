@@ -135,7 +135,7 @@ constraint, and surface ambiguity instead of redesigning the architecture.
 
 Use this lane only when a declared delegate or full route selects judgment-heavy,
 high-risk, context-heavy, or wide-blast-radius work, including risk revealed by a
-first Luna result. The installed role pins GPT-5.6 Terra at high reasoning. A
+first Luna result. The installed role pins GPT-6.1 Terra at high reasoning. A
 corrected Luna attempt is reserved for a specification error and is not a prerequisite
 for Terra.
 

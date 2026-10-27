@@ -18,7 +18,7 @@ latest available high-capability Sol or Astra model for the primary session
 (high reasoning recommended; medium or higher supported),
 native custom-agent support, and jq.
 Luna / Max or Terra / High access is needed only when the selected route delegates.
-The routine lane uses GPT-6 Luna; Terra remains on GPT-5.6. The reviewer currently
+The routine lane uses GPT-6 Luna; Terra uses GPT-6.1. The reviewer currently
 uses GPT-6.1 Sol / High; auxiliary model pins do not update automatically.
 Missing primary model or effort metadata does not require user confirmation;
 an observed non-Sol/non-Astra model or reasoning below medium stops delegation.

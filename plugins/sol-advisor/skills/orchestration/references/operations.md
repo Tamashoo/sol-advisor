@@ -15,7 +15,7 @@ Current auxiliary pins:
 | Role type | Model | Effort | Use |
 |---|---|---|---|
 | sol_advisor_luna_implementer | gpt-6-luna | max | Delegate/full bounded routine implementation |
-| sol_advisor_terra_implementer | gpt-5.6-terra | high | Delegate/full judgment-heavy or high-risk implementation |
+| sol_advisor_terra_implementer | gpt-6.1-terra | high | Delegate/full judgment-heavy or high-risk implementation |
 | sol_advisor_sol_reviewer | gpt-6.1-sol | high | Audit/full fresh review; requests read-only sandbox |
 
 Native spawn requests name the role and use a fresh context:
@@ -71,7 +71,8 @@ sh "$installer" --check
 
 The installer is fail-closed and performs its own post-install exactness check. It
 recognizes only byte-exact historical templates, including the shipped v0.2.0 profiles,
-the v0.5.0 Luna/Terra profiles, and the v0.6.0 GPT-5.6 Luna and Sol profiles.
+the v0.5.0 Luna/Terra profiles, the v0.6.0 GPT-5.6 Luna and Sol profiles,
+and the v0.6.1 GPT-5.6 Terra profile.
 Modified/unsafe/nonregular/symlinked/conflicting destinations remain refusals, and all mutations are preflighted.
 
 The root emits one machine-auditable declaration before its first task tool call:
@@ -197,6 +198,6 @@ git status --short
 git diff --stat
 ~~~
 
-The verifier covers the v0.6.0 manifest, exact three-role TOMLs, selective-routing
+The verifier covers the v0.6.2 manifest, exact three-role TOMLs, selective-routing
 contracts, concise README journey, absence of retired workflow references, installer
 safety fixtures, Luna runtime evidence, JSON/TOML validity, and shell syntax.
