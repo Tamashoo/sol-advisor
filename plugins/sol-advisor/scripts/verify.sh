@@ -46,6 +46,7 @@ legacy_terra_v050_sha256=dc329fe87f6f6610c13157ec16432f91c79cf5a541ee3e7448f6afb
 legacy_terra_v061_sha256=77ed2f36bb149da5d9032230c3d6f5e5cd56b059b3fa5f59085249bba06e1f3a
 legacy_luna_v060_sha256=12fa9180a292876e6731bc325779123bcd931c3caa902fbf90d676a31833be84
 legacy_sol_v060_sha256=0333acf0ef562bcfebd06009ac09bd1dd8cbc04c4cf28e08e9e049bd8bf202d2
+legacy_sol_v062_sha256=83fa964b13e43f59794e857bf79856960c30dff3a000e805c9cf25f4b2111e2e
 
 snapshot_files() {
   target=$1
@@ -166,14 +167,14 @@ test ! -e "$retired_contract" || fail "retired separate workflow contract remain
 pass "required files present and retired contract absent"
 
 jq empty "$manifest"
-[ "$(jq -r '.version' "$manifest")" = 0.6.2 ] || fail "manifest version is not 0.6.2"
+[ "$(jq -r '.version' "$manifest")" = 0.6.3 ] || fail "manifest version is not 0.6.3"
 grep -Fq 'SELECTIVE ROUTE' "$manifest" || fail "manifest omits route declaration"
 grep -Fq 'solo is the default' "$manifest" || fail "manifest omits solo default"
 grep -Fq 'delegate uses native GPT-6 Luna / Max' "$manifest" || fail "manifest omits delegate role contract"
-grep -Fq 'audit uses a fresh read-only GPT-6.1 Sol / High review' "$manifest" || fail "manifest omits audit contract"
+grep -Fq 'audit uses a fresh read-only GPT-6.2 Sol / High review' "$manifest" || fail "manifest omits audit contract"
 grep -Fq 'full combines one selected implementer' "$manifest" || fail "manifest omits exceptional full contract"
 grep -Fq 'fails closed' "$manifest" || fail "manifest omits fail-closed evidence rule"
-pass "manifest JSON, v0.6.2 release, and selective-routing language"
+pass "manifest JSON, v0.6.3 release, and selective-routing language"
 
 python3 - "$templates" <<'PY'
 from pathlib import Path
@@ -194,7 +195,7 @@ expected = {
     },
     "sol-advisor-sol-reviewer.toml": {
         "name": "sol_advisor_sol_reviewer",
-        "model": "gpt-6.1-sol",
+        "model": "gpt-6.2-sol",
         "model_reasoning_effort": "high",
         "sandbox_mode": "read-only",
     },
@@ -219,6 +220,8 @@ grep -Fq "legacy_terra_sha256=$legacy_terra_sha256" "$installer" || fail "instal
 grep -Fq "legacy_luna_v050_sha256=$legacy_luna_v050_sha256" "$installer" || fail "installer v0.5.0 Luna digest mismatch"
 grep -Fq "legacy_terra_v050_sha256=$legacy_terra_v050_sha256" "$installer" || fail "installer v0.5.0 Terra digest mismatch"
 grep -Fq "legacy_terra_v061_sha256=$legacy_terra_v061_sha256" "$installer" || fail "installer v0.6.1 Terra digest mismatch"
+grep -Fq "legacy_sol_v060_sha256=$legacy_sol_v060_sha256" "$installer" || fail "installer old Sol digest mismatch"
+grep -Fq "legacy_sol_v062_sha256=$legacy_sol_v062_sha256" "$installer" || fail "installer v0.6.2 Sol digest mismatch"
 pass "immutable historical migration fingerprints"
 
 clean_target=$tmp_dir/clean
@@ -347,7 +350,7 @@ pass "exact v0.6.1 Terra migration, old-model check refusal, and modified-profil
 
 sol_migration_target=$tmp_dir/sol-migration
 sh "$installer" --target-dir "$sol_migration_target"
-sed 's/gpt-6.1-sol/gpt-5.6-sol/' "$templates/$sol_file" > "$sol_migration_target/$sol_file"
+sed 's/gpt-6.2-sol/gpt-5.6-sol/' "$templates/$sol_file" > "$sol_migration_target/$sol_file"
 [ "$(shasum -a 256 "$sol_migration_target/$sol_file" | awk '{print $1}')" = "$legacy_sol_v060_sha256" ] || fail "old Sol fixture digest drifted"
 before=$(snapshot_files "$sol_migration_target")
 if sh "$installer" --target-dir "$sol_migration_target" --check --check-role sol; then fail "check accepted old GPT-5.6 Sol"; fi
@@ -356,10 +359,27 @@ printf '%s\n' modified >> "$sol_migration_target/$sol_file"
 before=$(snapshot_files "$sol_migration_target")
 if sh "$installer" --target-dir "$sol_migration_target"; then fail "installer replaced modified old Sol"; fi
 [ "$before" = "$(snapshot_files "$sol_migration_target")" ] || fail "modified old Sol refusal mutated target"
-sed 's/gpt-6.1-sol/gpt-5.6-sol/' "$templates/$sol_file" > "$sol_migration_target/$sol_file"
+sed 's/gpt-6.2-sol/gpt-5.6-sol/' "$templates/$sol_file" > "$sol_migration_target/$sol_file"
 sh "$installer" --target-dir "$sol_migration_target"
 sh "$installer" --target-dir "$sol_migration_target" --check
 pass "exact old Sol migration, old-model check refusal, and modified-profile refusal"
+
+v062_migration_target=$tmp_dir/v062-migration
+sh "$installer" --target-dir "$v062_migration_target"
+sed 's/gpt-6.2-sol/gpt-6.1-sol/' "$templates/$sol_file" > "$v062_migration_target/$sol_file"
+[ "$(shasum -a 256 "$v062_migration_target/$sol_file" | awk '{print $1}')" = "$legacy_sol_v062_sha256" ] || fail "v0.6.2 Sol fixture digest drifted"
+before=$(snapshot_files "$v062_migration_target")
+if sh "$installer" --target-dir "$v062_migration_target" --check --check-role sol; then fail "check accepted old GPT-6.1 Sol"; fi
+[ "$before" = "$(snapshot_files "$v062_migration_target")" ] || fail "old GPT-6.1 Sol check mutated target"
+printf '%s\n' modified >> "$v062_migration_target/$sol_file"
+before=$(snapshot_files "$v062_migration_target")
+if sh "$installer" --target-dir "$v062_migration_target"; then fail "installer replaced modified v0.6.2 Sol"; fi
+[ "$before" = "$(snapshot_files "$v062_migration_target")" ] || fail "modified v0.6.2 Sol refusal mutated target"
+sed 's/gpt-6.2-sol/gpt-6.1-sol/' "$templates/$sol_file" > "$v062_migration_target/$sol_file"
+sh "$installer" --target-dir "$v062_migration_target"
+sh "$installer" --target-dir "$v062_migration_target" --check
+cmp -s "$templates/$sol_file" "$v062_migration_target/$sol_file" || fail "v0.6.2 Sol migration mismatch"
+pass "exact v0.6.2 Sol migration, old-model check refusal, and modified-profile refusal"
 
 modified_v050_luna=$tmp_dir/modified-v050-luna
 write_v050_roles "$modified_v050_luna"
@@ -601,4 +621,4 @@ sh -n "$runtime_inspector"
 sh -n "$script_dir/verify.sh"
 pass "shell syntax"
 
-printf '%s\n' "VERIFY PASSED: Sol Advisor v0.6.2 selective routing checks completed in $tmp_dir"
+printf '%s\n' "VERIFY PASSED: Sol Advisor v0.6.3 selective routing checks completed in $tmp_dir"

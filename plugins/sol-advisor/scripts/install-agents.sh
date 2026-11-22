@@ -224,6 +224,8 @@ legacy_terra_v061_sha256=77ed2f36bb149da5d9032230c3d6f5e5cd56b059b3fa5f59085249b
 legacy_luna_v060_sha256=12fa9180a292876e6731bc325779123bcd931c3caa902fbf90d676a31833be84
 # Immutable GPT-5.6 Sol reviewer, before the GPT-6.1 migration.
 legacy_sol_v060_sha256=0333acf0ef562bcfebd06009ac09bd1dd8cbc04c4cf28e08e9e049bd8bf202d2
+# Immutable v0.6.2 GPT-6.1 Sol reviewer, before the GPT-6.2 migration.
+legacy_sol_v062_sha256=83fa964b13e43f59794e857bf79856960c30dff3a000e805c9cf25f4b2111e2e
 
 for template in "$luna_template" "$terra_template" "$sol_template"; do
   [ -f "$template" ] && [ ! -L "$template" ] ||
@@ -239,7 +241,7 @@ fi
 
 luna_state=$(classify_current_or_legacy "$luna_destination" "$luna_template" "$legacy_luna_sha256" "$legacy_luna_v050_sha256" "$legacy_luna_v060_sha256")
 terra_state=$(classify_current_or_legacy "$terra_destination" "$terra_template" "$legacy_terra_sha256" "$legacy_terra_v050_sha256" "$legacy_terra_v061_sha256")
-sol_state=$(classify_current_or_legacy "$sol_destination" "$sol_template" "$legacy_sol_v060_sha256")
+sol_state=$(classify_current_or_legacy "$sol_destination" "$sol_template" "$legacy_sol_v060_sha256" "$legacy_sol_v062_sha256")
 
 if [ "$check_only" -eq 1 ]; then
   if role_selected luna; then
@@ -288,7 +290,7 @@ fi
 
 same_state Luna "$luna_state" "$(classify_current_or_legacy "$luna_destination" "$luna_template" "$legacy_luna_sha256" "$legacy_luna_v050_sha256" "$legacy_luna_v060_sha256")"
 same_state Terra "$terra_state" "$(classify_current_or_legacy "$terra_destination" "$terra_template" "$legacy_terra_sha256" "$legacy_terra_v050_sha256" "$legacy_terra_v061_sha256")"
-same_state Sol "$sol_state" "$(classify_current_or_legacy "$sol_destination" "$sol_template" "$legacy_sol_v060_sha256")"
+same_state Sol "$sol_state" "$(classify_current_or_legacy "$sol_destination" "$sol_template" "$legacy_sol_v060_sha256" "$legacy_sol_v062_sha256")"
 
 case "$luna_state" in
   missing) install_missing "$luna_template" "$luna_destination" ;;
@@ -304,7 +306,7 @@ esac
 
 case "$sol_state" in
   missing) install_missing "$sol_template" "$sol_destination" ;;
-  legacy) replace_legacy_role Sol "$sol_template" "$sol_destination" "$legacy_sol_v060_sha256" ;;
+  legacy) replace_legacy_role Sol "$sol_template" "$sol_destination" "$legacy_sol_v060_sha256" "$legacy_sol_v062_sha256" ;;
   current) printf '%s\n' "ALREADY CURRENT: $sol_destination" ;;
 esac
 
@@ -312,7 +314,7 @@ esac
   fail "post-install exactness check failed: $luna_destination"
 [ "$(classify_current_or_legacy "$terra_destination" "$terra_template" "$legacy_terra_sha256" "$legacy_terra_v050_sha256" "$legacy_terra_v061_sha256")" = current ] ||
   fail "post-install exactness check failed: $terra_destination"
-[ "$(classify_current_or_legacy "$sol_destination" "$sol_template" "$legacy_sol_v060_sha256")" = current ] ||
+[ "$(classify_current_or_legacy "$sol_destination" "$sol_template" "$legacy_sol_v060_sha256" "$legacy_sol_v062_sha256")" = current ] ||
   fail "post-install exactness check failed: $sol_destination"
 
 printf '%s\n' "INSTALL PASSED: Luna, Terra, and Sol exactly match $template_dir."
