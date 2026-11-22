@@ -167,7 +167,7 @@ agent_type: sol_advisor_sol_reviewer
 fork_turns: none
 ~~~
 
-The installed reviewer currently pins GPT-6.1 Sol / High and requests a read-only
+The installed reviewer currently pins GPT-6.2 Sol / High and requests a read-only
 sandbox. The primary-session model policy does not automatically update this pin.
 Do not attach per-spawn model or reasoning fields. Observe the actual role, pin, sandbox policy, and
 permission profile before accepting its verdict.
